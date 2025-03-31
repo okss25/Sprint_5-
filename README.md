@@ -1,6 +1,4 @@
-# Sprint_5-
-Stellar Burgers - космический фастфуд:
-<<<<<<< HEAD
+
 # Sprint_5-
 Stellar Burgers - космический фастфуд:
 Что нужно проверить
