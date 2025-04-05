@@ -1,16 +1,16 @@
-from Sprint_5 import data, locators
-
-from web_locators.locators import *
-
+import data
+import locator
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 class TestLoginTheSite:
     def test_login_to_account_with_button_in_the_main_page(self, driver):
         # переход в "войти в аккаунт"
         driver.find_element(*locators.TestLocators.LOGIN_TO_ACCOUNT_BUTTON).click()
         # вход зарегистрированным пользователем
-        driver.find_element(*locators.TestLocators.LOGIN_MAIL_FIELD).send_keys(data.user[1])
-        driver.find_element(*locators.TestLocators.LOGIN_PASSWORD_FIELD).send_keys(data.user[2])
-        driver.find_element(*locators.TestLocators.LOGIN_BUTTON).click()
+        driver.find_element(locator.TestLocators.LOGIN_MAIL_FIELD).send_keys(data.user[1])
+        driver.find_element(locator.TestLocators.LOGIN_PASSWORD_FIELD).send_keys(data.user[2])
+        driver.find_element(locator.TestLocators.LOGIN_BUTTON).click()
 
         WebDriverWait(driver, 3).until(EC.url_to_be("https://stellarburgers.nomoreparties.site/"))
 
@@ -21,11 +21,11 @@ class TestLoginTheSite:
 
     def test_login_through_personal_account_button(self, driver):
         # нажатие В ЛК
-        driver.find_element(*locators.TestLocators.PERSONAL_ACCOUNT_BUTTON).click()
+        driver.find_element(locator.TestLocators.PERSONAL_ACCOUNT_BUTTON).click()
         # вход зарегистрированным пользователем
-        driver.find_element(*locators.TestLocators.LOGIN_MAIL_FIELD).send_keys(data.user[1])
-        driver.find_element(*locators.TestLocators.LOGIN_PASSWORD_FIELD).send_keys(data.user[2])
-        driver.find_element(*locators.TestLocators.LOGIN_BUTTON).click()
+        driver.find_element(locator.TestLocators.LOGIN_MAIL_FIELD).send_keys(data.user[1])
+        driver.find_element(locator.TestLocators.LOGIN_PASSWORD_FIELD).send_keys(data.user[2])
+        driver.find_element(locator.TestLocators.LOGIN_BUTTON).click()
 
         WebDriverWait(driver, 3).until(EC.url_to_be("https://stellarburgers.nomoreparties.site/"))
 
@@ -36,15 +36,15 @@ class TestLoginTheSite:
 
     def test_registration_with_test_login(self, driver):
         # переход в "войти в аккаунт"
-        driver.find_element(*locators.TestLocators.LOGIN_TO_ACCOUNT_BUTTON).click()
+        driver.find_element(locator.TestLocators.LOGIN_TO_ACCOUNT_BUTTON).click()
         # нажатие на кнопку зарегистрироваться
-        driver.find_element(*locators.TestLocators.REGISTRATION_BUTTON).click()
+        driver.find_element(locators.TestLocators.REGISTRATION_BUTTON).click()
         # переход в "войти в аккаунт"
-        driver.find_element(*locators.TestLocators.LOGIN_BUTTON_ON_REGISTRATION_PAGE).click()
+        driver.find_element(locator.TestLocators.LOGIN_BUTTON_ON_REGISTRATION_PAGE).click()
         # вход зарегистрированным пользователем
-        driver.find_element(*locators.TestLocators.LOGIN_MAIL_FIELD).send_keys(data.user[1])
-        driver.find_element(*locators.TestLocators.LOGIN_PASSWORD_FIELD).send_keys(data.user[2])
-        driver.find_element(*locators.TestLocators.LOGIN_BUTTON).click()
+        driver.find_element(locator.TestLocators.LOGIN_MAIL_FIELD).send_keys(data.user[1])
+        driver.find_element(locator.TestLocators.LOGIN_PASSWORD_FIELD).send_keys(data.user[2])
+        driver.find_element(locator.TestLocators.LOGIN_BUTTON).click()
 
         WebDriverWait(driver, 3).until(EC.url_to_be("https://stellarburgers.nomoreparties.site/"))
 

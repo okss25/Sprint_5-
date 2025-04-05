@@ -1,11 +1,9 @@
-import pytest
-import time
-from selenium.webdriver.support.wait import WebDriverWait
+import data
+import helper
+import locator
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
-from web_locators.locators import *
-from Sprint_5.data import Urls
-from data.data import ValidData
 
 class TestStellarBurgersRegistration:
 

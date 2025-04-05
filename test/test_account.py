@@ -1,4 +1,7 @@
-from Sprint_5 import locators
+from locator.locator import *
+from data.curl import сurl
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class TestMovingToPersonalAccount:
