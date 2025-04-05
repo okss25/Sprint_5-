@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from web_locators.locators import *
 from Sprint_5.data import Urls
+from data.data import ValidData
 
 class TestStellarBurgersRegistration:
 
