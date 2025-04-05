@@ -11,9 +11,9 @@ class TestStellarBurgersRegistration:
         #При успешной регистрации перебрасывает на страницу входа
         driver.get(Urls.url_register)
 
-        driver.find_element(*AuthRegistre.ar_name_field).send_keys(ValidData.user_name)
-        driver.find_element(*AuthRegistre.ar_email_field).send_keys(ValidData.login)
-        driver.find_element(*AuthRegistre.ar_password_field).send_keys(ValidData.password)
+        driver.find_element(AuthRegistre.ar_name_field).send_keys(ValidData.user_name)
+        driver.find_element(AuthRegistre.ar_email_field).send_keys(ValidData.login)
+        driver.find_element(AuthRegistre.ar_password_field).send_keys(ValidData.password)
 
         driver.find_element(*AuthRegistre.ar_register_button).click()
         WebDriverWait(driver, 8).until(EC.presence_of_element_located(AuthLogin.al_element_with_login_text))
@@ -25,10 +25,10 @@ class TestStellarBurgersRegistration:
         #При пустом поле Имя ничего не происходит: ошибки и перехода на страницу входа нет
         driver.get(Urls.url_register)
 
-        driver.find_element(*AuthRegistre.ar_email_field).send_keys('K123456@ya.ru')
-        driver.find_element(*AuthRegistre.ar_password_field).send_keys('K123456')
+        driver.find_element(AuthRegistre.ar_email_field).send_keys('K123456@ya.ru')
+        driver.find_element(AuthRegistre.ar_password_field).send_keys('K123456')
 
-        driver.find_element(*AuthRegistre.ar_register_button).click()
+        driver.find_element(AuthRegistre.ar_register_button).click()
         WebDriverWait(driver, 5).until(EC.element_to_be_clickable(AuthRegistre.ar_register_button))
         time.sleep(2)
         errors_messages = driver.find_elements(*AuthRegistre.ar_error_message)
@@ -44,7 +44,7 @@ class TestStellarBurgersRegistration:
 
         driver.find_element(*AuthRegistre.ar_name_field).send_keys('Kitsi')
         driver.find_element(*AuthRegistre.ar_email_field).send_keys(email_list)
-        driver.find_element(*AuthRegistre.ar_password_field).send_keys('K123456')
+        driver.find_element(AuthRegistre.ar_password_field).send_keys('K123456')
 
         driver.find_element(*AuthRegistre.ar_register_button).click()
         WebDriverWait(driver, 5).until(EC.presence_of_element_located(AuthRegistre.ar_error_message_2))
