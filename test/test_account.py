@@ -1,5 +1,5 @@
-from locator.locator import *
-from data.curl import сurl
+import data
+import locators
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -7,7 +7,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 class TestMovingToPersonalAccount:
     def test_click_on_personal_account(self, driver):
         # вход на сайт
-        driver.find_element(*locators.TestLocators.PERSONAL_ACCOUNT_BUTTON).click()
+        driver.find_element(locators.TestLocators.PERSONAL_ACCOUNT_BUTTON).click()
 
         # введение учётных данных
         driver.find_element(*locators.TestLocators.LOGIN_MAIL_FIELD).send_keys(data.user[1])
