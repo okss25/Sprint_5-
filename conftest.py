@@ -1,48 +1,58 @@
 import pytest
+import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
+from curl import *
+from data import Credentials
+from locators import Locators
+
+
+@pytest.fixture(scope="session")
+def driver():
+    options = Options()
+    options.binary_location = "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"
+    options.add_argument("--window-size=1200,600")
+    service = Service("*\Users\Huawei\Web driver\bin\chromedriver-win64\chromedriver-win64")
+    browser = webdriver.Chrome(options=options, service=service)
+    browser.get(main_site)
+    yield browser
+    browser.quit()
 
 
 @pytest.fixture
-def driver():
-    options = Options()
-    options.add_argument('--window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.get('https://stellarburgers.nomoreparties.site/')
-    yield driver
-    driver.quit()
-    import pytest
-    from selenium import webdriver
+def login(driver):
+    """
+    Фикстура для авторизации пользователя.
+    """
+    # Вводим email в поле "Email"
+    driver.find_element(*Locators.EMAIL).send_keys(Credentials.email)
+    driver.find_element(*Locators.PASSWORD).send_keys(Credentials.password)
+    driver.find_element(*Locators.REGISTER_BUTTON).click()
 
-    import pytest
-    from selenium import webdriver
-    from selenium.webdriver.chrome.options import Options
-    from selenium.webdriver.support.wait import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
+    return driver
 
-    from web_locators.locators import *
-    from data.urls import Urls
-    from data.data import PersonData
+@pytest.fixture()
+def revert_avatar():
+    # Учётные данные пользователя
+    credentials = {
+        "email": Credentials.email,
+        "password": Credentials.password,
+    }
 
-    @pytest.fixture
-    def driver():
-        options = Options()
-        options.add_argument("--window-size=1300,1200")
-        driver = webdriver.Chrome(options=options)
-        driver.get(Urls.url_main_paige)
-        yield driver
-        driver.quit()
+    # Авторизация
+    response = requests.post(auth_endpoint, json=credentials)
+    token = response.json().get("token")
 
-    @pytest.fixture
-    def login(driver):
-        # Войти в аккаунт
-        driver.get(Urls.url_login)
+    # Обновление аватара
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    }
+    update_data = {
+        "avatar": default_ava_url,
+    }
+    requests.patch(avatar_update_endpoint, json=update_data, headers=headers)
 
-        driver.find_element(*AuthLogin.al_email_field).send_keys(PersonData.login)
-        driver.find_element(*AuthLogin.al_password_field).send_keys(PersonData.password)
-        driver.find_element(*AuthLogin.al_login_button_any_forms).click()
-
-        WebDriverWait(driver, 3).until(EC.presence_of_element_located(MainPage.mn_order_button))
-        yield driver
-        driver.quit()
+    yield
