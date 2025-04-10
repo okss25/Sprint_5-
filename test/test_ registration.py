@@ -1,45 +1,38 @@
 
-import
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-import time
 import random
 import string
 
-def generate_random_email(length=8):
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(length)) + "@example.com"
 
-def generate_random_password(length=8):
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(length))
-
-@pytest.fixture
-def driver():
-    options = Options()
-    options.add_argument("--headless")  # Запуск в фоновом режиме
-    driver = webdriver.Chrome(options=options)
-    yield driver
-    driver.quit()
-
-def test_successful_registration(driver):
-    driver.get("https://stellarburgers.nomoreparties.site/register")
-    driver.find_element(By.XPATH, "//label[text()='Имя']/following-sibling::input").send_keys("TestUser")
+def test_successful_registration(self):
+    # Генерируем случайные данные для регистрации
+    user_name = 'Kitsi'
     email = generate_random_email()
-    driver.find_element(By.XPATH, "//label[text()='Email']/following-sibling::input").send_keys(email)
-    password = generate_random_password(8)
-    driver.find_element(By.XPATH, "//label[text()='Пароль']/following-sibling::input").send_keys(password)
-    driver.find_element(By.XPATH, "//button[text()='Зарегистрироваться']").click()
-    time.sleep(2)
-    assert "login" in driver.current_url
+    password = generate_random_password()
 
-def test_incorrect_password(driver):
-    driver.get("https://stellarburgers.nomoreparties.site/register")
-    driver.find_element(By.XPATH, "//label[text()='Имя']/following-sibling::input").send_keys("TestUser")
+    # Заполняем форму регистрации
+    self.driver.find_element(*NAME_INPUT).send_keys(user_name)
+    self.driver.find_element(*EMAIL_INPUT).send_keys(email)
+    self.driver.find_element(*PASSWORD_INPUT).send_keys(password)
+    self.driver.find_element(*REGISTER_BUTTON).click()
+
+    # Проверяем, что произошел переход на страницу логина (косвенно подтверждаем успешную регистрацию)
+    self.assertEqual(self.driver.current_url, "https://stellarburgers.nomoreparties.site/login")
+
+
+def test_incorrect_password_error(self):
+    # Заполняем форму регистрации с некорректным паролем
+    user_name = 'Kitsi'
     email = generate_random_email()
-    driver.find_element(By.XPATH, "//label[text()='Email']/following-sibling::input").send_keys(email)
-    driver.find_element(By.XPATH, "//label[text()='Пароль']/following-sibling::input").send_keys("123")
-    driver.find_element(By.XPATH, "//button[text()='Зарегистрироваться']").click()
-    time.sleep(2)
-    assert "Некорректный пароль" in driver.page_source
+    password = 'Kit1'
+
+    self.driver.find_element(*NAME_FIELD).send_keys(user_name)
+    self.driver.find_element(*EMAIL_FIELD ).send_keys(email)
+    self.driver.find_element(*PASSWORD_FIELD).send_keys(password)
+    self.driver.find_element(*REGISTER_BUTTON).click()
+
+    # Проверяем появление сообщения об ошибке
+    self.assertTrue(self.driver.find_element(*ERROR_MESSAGE).is_displayed())
