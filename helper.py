@@ -1,8 +1,8 @@
-from faker import Faker
+import random
 
-faker = Faker()
 
-def generate_registration_data():
-    email = faker.email()
-    password = faker.password(length=6, special_chars=True, digits=True, upper_case=True, lower_case=True)
-    return email, password  # Возвращаем кортеж (email, password)
+def generate_random_email(domain="ya.ru", username_prefix="Kitsi"):
+    random_number = random.randint(0, 9999)
+    login = f"{username_prefix}{random_number}"
+    email = f"{login}@{domain}"
+    return email

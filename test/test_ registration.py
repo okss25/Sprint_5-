@@ -1,38 +1,41 @@
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
+
+from data import Const
+from helper import generate_random_email
 
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-import random
-import string
+class TestRegistration:
 
+    def test_successful_registration(self, driver, page):
+        driver.get(Const.REGISTRATION_PAGE)
+        #проходим регистрацию на странице регистрации
+        driver.find_element(*page.input_name).send_keys(Const.NAME)
+        email = generate_random_email()
+        driver.find_element(*page.input_email).send_keys(email)
+        driver.find_element(*page.input_password).send_keys("Kitsi")
+        driver.find_element(*page.button_register).click()
+        # проходим авторизацию на странице «Вход»
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.button_log_in)))
+        driver.find_element(*page.input_email).send_keys(email)
+        driver.find_element(*page.input_password).send_keys("Kitsi")
+        driver.find_element(*page.button_log_in).click()
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.button_set_an_order)))
+        assert driver.find_element(*page.button_set_an_order)
+        # проверяем, что вход прошел успешно, сверяя почты в личном кабинете
+        driver.find_element(*page.button_personal_account).click()
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.menu_item_profile)))
+        profile_email = driver.find_element(*page.input_login_personal_account).get_attribute('value')
+        assert email == profile_email
 
-def test_successful_registration(self):
-    # Генерируем случайные данные для регистрации
-    user_name = 'Kitsi'
-    email = generate_random_email()
-    password = generate_random_password()
-
-    # Заполняем форму регистрации
-    self.driver.find_element(*NAME_INPUT).send_keys(user_name)
-    self.driver.find_element(*EMAIL_INPUT).send_keys(email)
-    self.driver.find_element(*PASSWORD_INPUT).send_keys(password)
-    self.driver.find_element(*REGISTER_BUTTON).click()
-
-    # Проверяем, что произошел переход на страницу логина (косвенно подтверждаем успешную регистрацию)
-    self.assertEqual(self.driver.current_url, "https://stellarburgers.nomoreparties.site/login")
-
-
-def test_incorrect_password_error(self):
-    # Заполняем форму регистрации с некорректным паролем
-    user_name = 'Kitsi'
-    email = generate_random_email()
-    password = 'Kit1'
-
-    self.driver.find_element(*NAME_FIELD).send_keys(user_name)
-    self.driver.find_element(*EMAIL_FIELD ).send_keys(email)
-    self.driver.find_element(*PASSWORD_FIELD).send_keys(password)
-    self.driver.find_element(*REGISTER_BUTTON).click()
-
-    # Проверяем появление сообщения об ошибке
-    self.assertTrue(self.driver.find_element(*ERROR_MESSAGE).is_displayed())
+    def test_check_incorrect_password(self, driver, page):
+        #Проверка ошибки при вводе некорректного пароля
+        driver.get(Const.REGISTRATION_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.button_register)))
+        driver.find_element(*page.input_name).send_keys(Const.NAME)
+        email = generate_random_email()
+        driver.find_element(*page.input_email).send_keys(email)
+        driver.find_element(*page.input_password).send_keys("Kit")
+        driver.find_element(*page.button_register).click()
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.error_field_password)))
+        assert driver.find_element(*page.error_field_password)

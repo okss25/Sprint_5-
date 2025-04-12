@@ -1,10 +1,65 @@
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
-from selenium.webdriver.common.by import By
+from const import Const
 
-class TestLogin:
-    def test_go_to_profile(self):
-        # Кликаем на кнопку "Личный кабинет"
-        driver.find_element(*LOGIN_BUTTON).click()
 
-        # Проверяем, что мы перешли на страницу логина (или другую страницу, связанную с личным кабинетом)
-        assert driver.current_url == "https://stellarburgers.nomoreparties.site/login"
+class TestLogOutInAccountPage:
+
+    def test_check_button_log_out_main_page(self, driver, page):
+        #Проверка выхода по кнопке «Выйти» в личном кабинете.
+        driver.get(Const.LOGIN_PAGE)
+        WebDriverWait(driver, 3).until(
+            expected_conditions.visibility_of_element_located((page.header_log_in_page)))
+
+        driver.find_element(*page.input_email).send_keys(Const.EMAIL)
+        driver.find_element(*page.input_password).send_keys(Const.PASSWORD)
+        driver.find_element(*page.button_log_in).click()
+        WebDriverWait(driver, 3).until(
+            expected_conditions.visibility_of_element_located((page.button_set_an_order)))
+        driver.find_element(*page.button_personal_account).click()
+        WebDriverWait(driver, 3).until(
+            expected_conditions.visibility_of_element_located((page.menu_item_profile)))
+        driver.find_element(*page.menu_item_log_in).click()
+        WebDriverWait(driver, 3).until(
+            expected_conditions.visibility_of_element_located((page.input_email)))
+        assert driver.find_element(*page.header_log_in_page)
+
+class TestLogInToTheSite:
+
+    def test_check_button_log_in_main_page(self, driver, page):
+        #вход по кнопке «Войти в аккаунт»
+        driver.get(Const.MAIN_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located(page.button_log_in_account))
+        driver.find_element(*page.button_log_in_account).click()
+        assert Const.LOGIN_PAGE == driver.current_url
+        #авторизация
+        driver.find_element(*page.input_email).send_keys(Const.EMAIL)
+        driver.find_element(*page.input_password).send_keys(Const.PASSWORD)
+        driver.find_element(*page.button_log_in).click()
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.button_set_an_order)))
+        assert driver.find_element(*page.button_set_an_order)
+
+    def test_check_personal_account_in_main_page(self, driver, page):
+        #вход через кнопку «Личный кабинет»
+        driver.get(Const.MAIN_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.button_personal_account)))
+        driver.find_element(*page.button_personal_account).click()
+        assert driver.find_element(*page.header_log_in_page)
+        assert Const.LOGIN_PAGE == driver.current_url
+
+    def test_check_log_in_in_registration_page(self, driver, page):
+        #вход через кнопку в форме регистрации
+        driver.get(Const.REGISTRATION_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.link_log_in)))
+        driver.find_element(*page.link_log_in).click()
+        assert driver.find_element(*page.header_log_in_page)
+        assert Const.LOGIN_PAGE == driver.current_url
+
+    def test_check_log_in_in_recovery_page(self, driver, page):
+        #вход через кнопку в форме восстановления пароля
+        driver.get(Const.RECOVERY_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.link_log_in)))
+        driver.find_element(*page.link_log_in).click()
+        assert driver.find_element(*page.header_log_in_page)
+        assert Const.LOGIN_PAGE == driver.current_url

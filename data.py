@@ -1,5 +1,11 @@
-class Credentials:
-    user_name = 'Kitsi'
-    email = 'K12345678899@ya.ru'
-    password = 'Kit123456'
 
+class Const:
+
+    REGISTRATION_PAGE = 'https://stellarburgers.nomoreparties.site/register'
+    MAIN_PAGE = 'https://stellarburgers.nomoreparties.site/'
+    LOGIN_PAGE = 'https://stellarburgers.nomoreparties.site/login'
+    RECOVERY_PAGE = 'https://stellarburgers.nomoreparties.site/forgot-password'
+
+    EMAIL = 'Kitsi@yandex.ru'
+    PASSWORD = 'K123456789'
+    NAME = 'Kitsi'

@@ -1,17 +1,19 @@
-
+import pytest
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
+from locators import LocatorsPage
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def driver():
-    options = Options()
-    options.add_argument("--window-size=1200,600")
-    service = Service("*\Users\Huawei\Web driver\bin\chromedriver-win64\chromedriver-win64")
-    driver = webdriver.Chrome(options=options, service=service)
-    yield browser
-    browser.quit()
+    driver = webdriver.Chrome()
+
+    yield driver
+    driver.quit()
+
+@pytest.fixture
+def page():
+    page = LocatorsPage()
+    return page
 
 
 

@@ -1,24 +1,40 @@
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
+from data import Const
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
+class TestTransfetAccountPage:
 
-class TestRegistration(self):
+    def test_check_transfer_to_account_page(self, driver, page):
+        #Проверка перехода по клику на «Личный кабинет».
+        driver.get(Const.MAIN_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.button_log_in_account)))
+        driver.find_element(*page.button_personal_account).click()
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.button_log_in)))
+        assert driver.find_element(*page.header_log_in_page)
 
-    def tearDown(self):
-        self.driver.quit()
+    def test_check_transfer_to_constructor_from_account_page(self, driver, page):
+        # Проверка перехода из личного кабинета в конструктор по клику на «Конструктоо».
+        driver.get(Const.LOGIN_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.header_log_in_page)))
+        driver.find_element(*page.input_email).send_keys(Const.EMAIL)
+        driver.find_element(*page.input_password).send_keys(Const.PASSWORD)
+        driver.find_element(*page.button_log_in).click()
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.button_personal_account)))
+        driver.find_element(*page.button_personal_account).click()
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.menu_item_profile)))
+        driver.find_element(*page.main_header_constructor).click()
+        assert driver.find_element(*page.header_constructor)
+        assert Const.MAIN_PAGE == driver.current_url
 
-    def test_successful_registration(self):
-        email = 'K12345678899@ya.ru'
-        password = 'Kit123456'
-
-        self.driver.find_element(*LOCATOR_NAME_FIELD).send_keys("Test User")
-        self.driver.find_element(*LOCATOR_EMAIL_FIELD).send_keys(email)
-        self.driver.find_element(*LOCATOR_PASSWORD_INPUT).send_keys(password)
-        self.driver.find_element(*LOCATOR_REGISTER_BUTTON).click()
-
-        # Добавляем явное ожидание перехода на страницу логина (или любой другой элемент)
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(LOCATOR_LOGIN_EMAIL_INPUT)
-        )
+    def test_check_tap_logo_transfer_to_constructor_from_account_page(self, driver, page):
+        # Проверка перехода из личного кабинета в конструктор по клику на логотип сайта
+        driver.get(Const.LOGIN_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.header_log_in_page)))
+        driver.find_element(*page.input_email).send_keys(Const.EMAIL)
+        driver.find_element(*page.input_password).send_keys(Const.PASSWORD)
+        driver.find_element(*page.button_log_in).click()
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((page.button_personal_account)))
+        driver.find_element(*page.logo_main_page).click()
+        assert driver.find_element(*page.header_constructor)
+        assert Const.MAIN_PAGE == driver.current_url

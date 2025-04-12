@@ -1,31 +1,31 @@
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
+from const import Const
 
 
-class TestConstructorSections:
-    def test_go_to_buns(self, driver):
-        driver.get(сurl_main_site)
-        sauces_button = driver.find_element(By.XPATH, "//span[text()='Соусы']/parent::div") # Локатор кнопки "Соусы"
-        sauces_button.click()
-        fillings_button = driver.find_element(By.XPATH, "//span[text()='Начинки']/parent::div") # Локатор кнопки "Начинки"
-        fillings_button.click()
-        buns_button = driver.find_element(By.XPATH, "//span[text()='Булки']/parent::div") # Локатор кнопки "Булки"
-        buns_button.click()
-        active_tab = driver.find_element(By.XPATH, "//div[contains(@class, 'tab_type_current') and .//span[text()='Булки']]") # Локатор активной вкладки "Булки"
-        assert active_tab.is_displayed()
+class TestChangeSection:
 
-    def test_go_to_sauces(self, driver):
-        driver.get(сurl_main_site)
-        sauces_button = driver.find_element(By.XPATH, "//span[//*[@id="root"]/div/main/section[1]/div[1]/div[2]/span()='Соусы']/parent::div"()='Соусы']/parent::div") # Локатор кнопки "Соусы"
-        sauces_button.click()
-        active_tab = driver.find_element(By.XPATH, "//div[contains(@class, 'tab_type_current') and .//span[///html/body/div/div/main/section[1]/div[1]/div[2]/span()='Соусы']]") # Локатор активной вкладки "Соусы"
-        assert active_tab.is_displayed()
+    def test_open_sauce_section(self, driver, page):
+        # Проверка переход к разделу «Соусы» в конструкторе:
+        driver.get(Const.MAIN_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located(page.button_log_in_account))
+        driver.find_element(*page.sauce_constructor).click()
+        assert driver.find_element(*page.select_tab_constructor).text == 'Соусы'
 
-    def test_go_to_fillings(self, driver):
-        driver.get(сurl_main_site)
-        fillings_button = driver.find_element(By.XPATH, "//span[/html/body/div/div/main/section[1]/div[1]/div[3]()='Начинки']/parent::div") # Локатор кнопки "Начинки"
-        fillings_button.click()
-        active_tab = driver.find_element(By.XPATH, "//div[contains(@class, 'tab_type_current') and .//span[text()='Начинки']]") # Локатор активной вкладки "Начинки"
-        assert active_tab.is_displayed()
+    def test_open_filling_section(self, driver, page):
+        #Проверка переход к разделу «Начинки» в конструкторе:
+        driver.get(Const.MAIN_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located(page.button_log_in_account))
+        driver.find_element(*page.filling_constructor).click()
+        assert driver.find_element(*page.select_tab_constructor).text == 'Начинки'
+
+    def test_open_bread_section(self, driver, page):
+        #Проверка переход к разделу «Булки» в конструкторе:
+        driver.get(Const.MAIN_PAGE)
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located(page.button_log_in_account))
+        #Раздел «Булки», проверить переход к «Булкам»
+        driver.find_element(*page.filling_constructor).click()
+        assert driver.find_element(*page.select_tab_constructor).text == 'Начинки'
+        driver.find_element(*page.bread_constructor).click()
+        assert driver.find_element(*page.select_tab_constructor).text == 'Булки'
